@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using BookStore.Domain.Entities;
 using BookStore.Domain.Abstract;
-
+//using BookStore.WebUI.Models;
 
 namespace BookStore.WebUI.Controllers
 {
@@ -14,39 +14,37 @@ namespace BookStore.WebUI.Controllers
             repository = repo;
         }
 
-        public RedirectToRouteResult AddToCart(int bookId, string returnUrl)
+        //public ViewResult Index(Cart cart, string returnUrl)
+        //{
+        //    return View(new CartIndexViewModel
+        //    {
+        //        Cart = cart,
+        //        ReturnUrl = returnUrl
+        //    });
+        //}
+
+        public RedirectToRouteResult AddToCart(Cart cart, int bookId, string returnUrl)
         {
             Book book = repository.Books
                 .FirstOrDefault(b => b.BookId == bookId);
 
             if (book != null)
             {
-                GetCart().AddItem(book, 1);
+                cart.AddItem(book, 1);
             }
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        public RedirectToRouteResult RemoveFromCart(int bookId, string returnUrl)
+        public RedirectToRouteResult RemoveFromCart(Cart cart, int bookId, string returnUrl)
         {
             Book book = repository.Books
                 .FirstOrDefault(b => b.BookId == bookId);
 
             if (book != null)
             {
-                GetCart().RemoveLine(book);
+                cart.RemoveLine(book);
             }
             return RedirectToAction("Index", new { returnUrl });
-        }
-
-        public Cart GetCart()
-        {
-            Cart cart = (Cart)Session["Cart"];
-            if (cart == null)
-            {
-                cart = new Cart();
-                Session["Cart"] = cart;
-            }
-            return cart;
         }
     }
 }
