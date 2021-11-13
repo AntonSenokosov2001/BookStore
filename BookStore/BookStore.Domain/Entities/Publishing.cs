@@ -1,7 +1,7 @@
 ﻿
 namespace BookStore.Domain.Entities
 {
-    class Publishing
+    public class Publishing
     {
         public int PublishingId { get; set; }
         public string PublishingName { get; set; }

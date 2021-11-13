@@ -4,7 +4,7 @@ using BookStore.Domain.Entities;
 
 namespace BookStore.Domain.Abstract
 {
-    interface IGenreRepository
+    public interface IGenreRepository
     {
         IEnumerable<Genre> Genres { get; }
     }

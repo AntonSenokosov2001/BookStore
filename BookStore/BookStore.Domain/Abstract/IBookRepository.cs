@@ -3,7 +3,7 @@ using BookStore.Domain.Entities;
 
 namespace BookStore.Domain.Abstract
 {
-    interface IBookRepository
+   public interface IBookRepository
     {
         IEnumerable<Book> Books { get; }
     }

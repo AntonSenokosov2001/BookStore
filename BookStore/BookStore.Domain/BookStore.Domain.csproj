@@ -67,6 +67,7 @@
     <Compile Include="Abstract\IGenreRepository.cs" />
     <Compile Include="Abstract\IPublishingRepository.cs" />
     <Compile Include="Entities\Book.cs" />
+    <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Genre.cs" />
     <Compile Include="Entities\Publishing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
