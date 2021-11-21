@@ -5,6 +5,10 @@ using BookStore.Domain.Abstract;
 using System.Collections.Generic;
 using System.Linq;
 using BookStore.WebUI.Controllers;
+using System.Web.Mvc;
+using BookStore.WebUI.Models;
+using System;
+using GameStore.WebUI.HtmlHelpers;
 
 namespace BookStore.UnitTests
 {
@@ -38,21 +42,90 @@ namespace BookStore.UnitTests
             {
                 new Book {BookId = 1, Name = "Book1", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
                 new Book {BookId = 2, Name = "Book2", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
-                new Book {BookId = 3, Name = "Book2", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
-                new Book {BookId = 4, Name = "Book3", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
-                new Book {BookId = 5, Name = "Book4", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
-                new Book {BookId = 6, Name = "Book5", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+                new Book {BookId = 3, Name = "Book3", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+                new Book {BookId = 4, Name = "Book4", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+                new Book {BookId = 5, Name = "Book5", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
             });
 
             BookController bookController = new BookController(mock.Object);
             bookController.pageSize = 3;
 
-            IEnumerable<Book> result = (IEnumerable<Book>)bookController.List(2).Model;
+            BooksListViewModel result = (BooksListViewModel)bookController.List(2).Model;
 
-            List<Book> books = result.ToList();
+            List<Book> books = result.Books.ToList();
             Assert.IsTrue(books.Count == 2);
             Assert.AreEqual(books[0].Name, "Book4");
             Assert.AreEqual(books[1].Name, "Book5");
+        }
+
+        [TestMethod]
+        public void Can_Generate_Page_Links()
+        {
+            HtmlHelper myHelper = null;
+
+            // Организация - создание объекта PagingInfo
+            PagingInfo pagingInfo = new PagingInfo
+            {
+                CurrentPage = 2,
+                TotalItems = 28,
+                ItemsPerPage = 10
+            };
+
+            // Организация - настройка делегата с помощью лямбда-выражения
+            Func<int, string> pageUrlDelegate = i => "Page" + i;
+
+            // Действие
+            MvcHtmlString result = myHelper.PageLinks(pagingInfo, pageUrlDelegate);
+
+            // Утверждение
+            Assert.AreEqual(@"<a class=""btn btn-default"" href=""Page1"">1</a>"
+                + @"<a class=""btn btn-default btn-primary selected"" href=""Page2"">2</a>"
+                + @"<a class=""btn btn-default"" href=""Page3"">3</a>",
+                result.ToString());
+        }
+
+        [TestMethod]
+        public void Can_Send_Pagination_View_Model()
+        {
+            Mock<IGenreRepository> mockgenre = new Mock<IGenreRepository>();
+            mockgenre.Setup(g => g.Genres).Returns(new List<Genre>
+            {
+                new Genre {GenreId = 1, GenreName = "Фантастика"},
+                new Genre {GenreId = 2, GenreName = "Роман"},
+                new Genre {GenreId = 3, GenreName = "Приключение"}
+            });
+
+            Mock<IPublishingRepository> mockpubl = new Mock<IPublishingRepository>();
+            mockpubl.Setup(p => p.Publishes).Returns(new List<Publishing>
+            {
+                new Publishing {PublishingId = 1, City = "Kiev", PublishingName = "KievPubl"},
+                new Publishing {PublishingId = 2, City = "Kharkiv", PublishingName = "KharkivPubl"},
+                new Publishing {PublishingId = 1, City = "Lviv", PublishingName = "LvivPubl"}
+            });
+
+            IGenreRepository genre = mockgenre.Object;
+            IPublishingRepository publishing = mockpubl.Object;
+
+            Mock<IBookRepository> mock = new Mock<IBookRepository>();
+            mock.Setup(m => m.Books).Returns(new List<Book>
+            {
+                new Book {BookId = 1, Name = "Book1", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+                new Book {BookId = 2, Name = "Book2", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+                new Book {BookId = 3, Name = "Book3", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+                new Book {BookId = 4, Name = "Book4", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+                new Book {BookId = 5, Name = "Book5", Genre = genre.Genres.FirstOrDefault(),  Author = "HGF", Description = "MHTdsfsdfsfs", Price=234M, Publishing = publishing.Publishes.FirstOrDefault(), Year=2007},
+            });
+
+            BookController bookController = new BookController(mock.Object);
+            bookController.pageSize = 3;
+
+            BooksListViewModel result = (BooksListViewModel)bookController.List(2).Model;
+
+            PagingInfo pageInfo = result.PagingInfo;
+            Assert.AreEqual(pageInfo.CurrentPage, 2);
+            Assert.AreEqual(pageInfo.ItemsPerPage, 3);
+            Assert.AreEqual(pageInfo.TotalItems, 5);
+            Assert.AreEqual(pageInfo.TotalPages, 2);
         }
     }
 }

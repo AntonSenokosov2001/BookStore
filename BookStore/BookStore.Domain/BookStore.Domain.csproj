@@ -65,11 +65,15 @@
   <ItemGroup>
     <Compile Include="Abstract\IBookRepository.cs" />
     <Compile Include="Abstract\IGenreRepository.cs" />
+    <Compile Include="Abstract\IOrderProcessor.cs" />
     <Compile Include="Abstract\IPublishingRepository.cs" />
+    <Compile Include="Concrete\EmailOrderProcessor.cs" />
+    <Compile Include="Concrete\EmailSettings.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Genre.cs" />
     <Compile Include="Entities\Publishing.cs" />
+    <Compile Include="Entities\ShippingDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
