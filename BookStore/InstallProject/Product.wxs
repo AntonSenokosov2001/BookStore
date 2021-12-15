@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define ProductName="BookStore" ?>
+  <?define ProductVersion="1.0.0.0" ?>
+  <?define ProductCode="b7bc7c6f-9a4e-4973-be84-eca8e3427c97"?>
+  <?define UpgradeCode="06a81104-1e30-463d-87e1-e8a79b4c682a"?>
+  <?define Manufacturer="Students KhAI: Senokosov Metolkin Kozyr"?>
+  
+<Product Id="$(var.ProductCode)" Name="$(var.ProductName)" Language="1049"
+         Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)"
+  UpgradeCode="$(var.UpgradeCode)">
+  
+  <Package InstallerVersion="200" Compressed="yes" />
+  <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+  
+    <Directory Id="TARGETDIR" Name="SourceDir">
+    <Directory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLLOCATION" Name="$(var.ProductName)">
+        <Component Id="ProductComponent" Guid="b11556a2-e066-4393-af5c-9c9210187eb2">
+          <File Id='Calc' DiskId='1' Source='D:\Универ\ІТРПЗ\BookStore\BookStore\BookStore\BookStore.Domain\bin\Debug\BookStore.Domain.pdb'/>
+        </Component>
+    </Directory>
+    </Directory>  
+      <Directory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)">
+        <Component Id="ApplicationShortcutCalc" Guid="4CEBD68F-E933-47f9-B02C-A4FC69FDB551">
+          <Shortcut Id="ShortcutBookStore"
+                    Name="BookStore"
+                    Description="$(var.ProductName)"
+                    Target="[INSTALLLOCATION]Calc.exe"
+                    WorkingDirectory="INSTALLLOCATION"/>
+          <Shortcut Id="ShortcutUninstall"
+                    Name="Uninstall"
+                    Description="Uninstall"
+                    Target="[SystemFolder]\msiexec"
+                    Arguments="/x [ProductCode]"
+                    WorkingDirectory="INSTALLDIR" />
+          <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+          <RegistryValue Root="HKCU" Key="Software\$(var.Manufacturer)\$(var.ProductName)"
+                         Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        </Component>
+      </Directory>      
+    </Directory>
+  </Directory>
+  
+    <Feature Id="ProductFeature" Title="SetupProject1" Level="1">
+    <ComponentRef Id="ProductComponent" />
+    <ComponentRef Id="ApplicationShortcutBookStore" />
+  </Feature>
+  
+  <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" ></Property>
+  <WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="License.rtf"/>
+  <UIRef Id="WixUI_InstallDir"/>
+
+</Product>
+
+<Product Id="$(var.ProductCode)" Name="$(var.ProductName)" Language="1049"
+         Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)"
+  UpgradeCode="$(var.UpgradeCode)">
+  
+  <Package InstallerVersion="200" Compressed="yes" />
+  <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+  
+    <Directory Id="TARGETDIR" Name="SourceDir">
+    <Directory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLLOCATION" Name="$(var.ProductName)">
+        <Component Id="ProductComponent" Guid="b11556a2-e066-4393-af5c-9c9210187eb2">
+          <File Id='Calc' DiskId='2' Source='D:\Универ\ІТРПЗ\BookStore\BookStore\BookStore\BookStore.WebUI\bin\BookStore.WebUI.exe'/>
+        </Component>
+    </Directory>
+    </Directory>  
+      <Directory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)">
+        <Component Id="ApplicationShortcutBookStore" Guid="4CEBD68F-E933-47f9-B02CA4FC69FDB551">
+          <Shortcut Id="ShortcutBookStore"
+                    Name="BookStore"
+                    Description="$(var.ProductName)"
+                    Target="[INSTALLLOCATION]Calc.exe"
+                    WorkingDirectory="INSTALLLOCATION"/>
+          <Shortcut Id="ShortcutUninstall"
+                    Name="Uninstall"
+                    Description="Uninstall"
+                    Target="[SystemFolder]\msiexec"
+                    Arguments="/x [ProductCode]"
+                    WorkingDirectory="INSTALLDIR" />
+          <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+          <RegistryValue Root="HKCU" Key="Software\$(var.Manufacturer)\$(var.ProductName)"
+                         Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        </Component>
+      </Directory>      
+    </Directory>
+  </Directory>
+  
+    <Feature Id="ProductFeature" Title="SetupProject1" Level="1">
+    <ComponentRef Id="ProductComponent" />
+    <ComponentRef Id="ApplicationShortcutBookStore" />
+  </Feature>
+  
+  <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" ></Property>
+  <WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="License.rtf"/>
+  <UIRef Id="WixUI_InstallDir"/>
+
+</Product>
+
+</Wix>
+
